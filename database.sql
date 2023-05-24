@@ -1,32 +1,18 @@
-from flask import Flask, render_template, request, flash
-import psycopg2
+create table people(
+    id bigserial not null primary key,
+    first_name varchar not null,
+    last_name varchar not null,
+    age varchar not null
+);
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'sdfsdfsdfsdfhdfg4324343'
+INSERT INTO people (first_name, last_name, age) VALUES ('Vinogradov Mikhail','Mikhail', '7329407581955920');
+INSERT INTO people (first_name, last_name, age) VALUES ('Burova Sofiya','Sofiya', '5993498700230738');
+INSERT INTO people (first_name, last_name, age) VALUES ('Aksenov Yaroslav','Yaroslav', '7794605189424746');
+INSERT INTO people (first_name, last_name, age) VALUES ('Pavlov Artemiy','Artemiy', '4092467794893583');
+INSERT INTO people (first_name, last_name, age) VALUES ('Novikova Mariya','Mariya', '5145641074259993');
+INSERT INTO people (first_name, last_name, age) VALUES ('Alekseev Vladislav','Vladislav', '5168460477240544');
+INSERT INTO people (first_name, last_name, age) VALUES ('Alekseeva Miroslava','Miroslava', '2580431080509514');
+INSERT INTO people (first_name, last_name, age) VALUES ('Vladimirov Maksim','Maksim', '9615252482589011');
+INSERT INTO people (first_name, last_name, age) VALUES ('Titov Fedor','Fedor', '4812049915388871');
+INSERT INTO people (first_name, last_name, age) VALUES ('Prokhorov Arseniy','Arseniy', '9930957891858514');
 
-conn = psycopg2.connect(database="service_db",
-                        user="postgres",
-                        password="bed8w7",
-                        host="localhost",
-                        port="5432")
-
-cursor = conn.cursor()
-
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        cursor.execute("SELECT * FROM service.users WHERE login=%s AND password=%s", (str(username), str(password)))
-        records = list(cursor.fetchall())
-        if records != []:
-            return render_template('account.html', full_name=records[0][1], login=records[0][2], password=records[0][3])
-        else:
-            if username == '' or password == '':
-                flash('login and password should not be empty')
-            else:
-                flash('invalid username or password')
-    return render_template('login.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
